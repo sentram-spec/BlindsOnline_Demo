@@ -249,7 +249,7 @@ input,select,textarea{font-family:'DM Sans',sans-serif}
 <body>
 
 <!-- Login -->
-<div id="loginScreen">
+<div id="loginScreen" style="display:none">
   <div class="login-card">
     <div class="login-logo">Smart<span>Blinds</span></div>
     <p class="login-sub">Business management portal</p>
@@ -267,7 +267,7 @@ input,select,textarea{font-family:'DM Sans',sans-serif}
 </div>
 
 <!-- App -->
-<div id="app" style="display:none;flex-direction:column;height:100dvh">
+<div id="app" style="display:flex; flex-direction:column; height:100dvh">
   <!-- Demo banner -->
   <div class="demo-banner">
     <span>Demo</span>
@@ -475,6 +475,10 @@ input,select,textarea{font-family:'DM Sans',sans-serif}
             <label class="field-label">Quote terms / notes</label>
             <textarea class="inp" id="bTerms" rows="4" placeholder="e.g. Quote valid for 30 days. 50% deposit required."></textarea>
           </div>
+		  <div class="field-wrap">
+  <label class="field-label">Thank you note (PDF bottom)</label>
+  <textarea class="inp" id="bThanks" rows="2" placeholder="e.g. Thank you for supporting a local Alberton business!"></textarea>
+</div>
           <div class="field-wrap">
             <label class="field-label">Next quote number</label>
             <input class="inp" id="bQuoteStart" type="number" placeholder="1001"/>
@@ -606,6 +610,8 @@ function loadBizSettings() {
   if (biz.addr) document.getElementById('bAddr').value = biz.addr;
   if (biz.terms) document.getElementById('bTerms').value = biz.terms;
   if (biz.quoteStart) document.getElementById('bQuoteStart').value = biz.quoteStart;
+  // In loadBizSettings()
+if (biz.thanks) document.getElementById('bThanks').value = biz.thanks;
 }
 function saveBusiness() {
   biz.name = document.getElementById('bName').value.trim() || biz.name;
@@ -625,6 +631,8 @@ function saveQuoteSettings() {
   localStorage.setItem('sb_biz', JSON.stringify(biz));
   loadQuoteNum();
   toast('Quote settings saved');
+  biz.thanks = document.getElementById('bThanks').value;
+// ... existing localStorage.setItem('sb_biz', JSON.stringify(biz));
 }
 
 /* ─── Quote number ─── */
@@ -902,6 +910,18 @@ function downloadPDF() {
     const lines = doc.splitTextToSize(biz.terms, 182);
     doc.text(lines, 14, y + 5);
   }
+  
+  
+  // Inside downloadPDF() - add before doc.save
+if (biz.thanks) {
+    doc.setFont('helvetica', 'italic');
+    doc.setFontSize(10);
+    doc.setTextColor(107, 104, 96); // Matches your --muted color
+    
+    // Position it near the bottom (page height is 297mm)
+    const pageHeight = doc.internal.pageSize.height;
+    doc.text(biz.thanks, 105, pageHeight - 20, { align: 'center' });
+}
 
   doc.save(`Quote_${q}_${(document.getElementById('custName').value || 'Customer').replace(/\s+/g, '_')}.pdf`);
   toast('PDF downloaded');
@@ -944,8 +964,8 @@ function updateDemoUI() {
   document.getElementById('demoBarFill').style.width = pct + '%';
   document.getElementById('demoUsageText').textContent = used + ' of ' + DEMO_LIMIT + ' quotes used · ' + remaining + ' remaining';
   // Update lock contact info from biz settings
-  const phone = biz.phone || 'your SmartBlinds representative';
-  const email = biz.email || 'to unlock the full version';
+  const phone = "063 855 7681" || 'your Local Lift ZA representative';
+  const email = "locallift.za@gmail.com" || 'to unlock the full version';
   const lockPhone = document.getElementById('lockPhone');
   const lockEmail = document.getElementById('lockEmail');
   if (lockPhone) lockPhone.textContent = phone;
@@ -963,15 +983,25 @@ function showLockScreen() {
 }
 
 function sendWhatsAppUnlock() {
-  let p = (biz.phone || '').replace(/[^0-9]/g, '');
-  if (p.startsWith('0')) p = '27' + p.slice(1);
-  const msg = 'Hi! I have been using the SmartBlinds demo and I would like to unlock the full version. Please assist.';
-  if (p.length > 8) {
-    window.open('https://wa.me/' + p + '?text=' + encodeURIComponent(msg));
-  } else {
-    toast('Set your phone number in Settings so clients can reach you');
-  }
+  // HARDCODED: Your WhatsApp number in international format (no + or spaces)
+  const myWhatsAppNumber = "27638557681"; 
+  const msg = "Hi! I am using the SmartBlinds demo and would like to unlock the full version for my business. Please assist.";
+  
+  window.open('https://wa.me/' + myWhatsAppNumber + '?text=' + encodeURIComponent(msg));
 }
+
+// Auto-initialize the app when the page loads to skip login
+window.addEventListener('DOMContentLoaded', () => {
+  // Check if we are on mobile to set the correct layout
+  const isMobile = window.innerWidth <= 768;
+  document.getElementById('app').style.flexDirection = isMobile ? 'column' : 'row';
+  
+  // Run the original setup logic
+  init();
+  checkDemoLock();
+});
+
+
 </script>
 </body>
 </html>
