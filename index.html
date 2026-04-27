@@ -331,12 +331,16 @@ button,input,select,textarea{font-family:'DM Sans',sans-serif;cursor:pointer}
 <!-- Lock screen -->
 <div id="lockScreen">
   <div class="lock-card">
+	<div style="margin-bottom: 20px;">
+        <h1 style="font-size: 18px; font-weight: 600;">Local<span>Lift</span> ZA</h1>
+        <p style="font-size: 10px; color: var(--success); font-weight: 700; text-transform: uppercase;">We Lift Local Businesses</p>
+    </div>
     <div class="lock-icon">🔒</div>
     <h2>Demo limit reached</h2>
     <p>You have used all 5 demo quotes. Contact us to unlock the full version of SmartBlinds and keep growing your business.</p>
     <div class="lock-contact">
-      <p>📞 <span id="lockPhone">063 855 7681</span></p>
-      <p>✉️ <span id="lockEmail">locallift.za@gmail.com</span></p>
+      <p>📞 <a href="tel:+27638557681" style="color:var(--accent-dark);font-weight:500;text-decoration:none" id="lockPhone">063 855 7681</a></p>
+      <p>✉️ <a href="mailto:locallift.za@gmail.com" style="color:var(--accent-dark);font-weight:500;text-decoration:none" id="lockEmail">locallift.za@gmail.com</a></p>
     </div>
     <button class="btn btn-primary btn-full" id="unlockWaBtn">📲 WhatsApp us to unlock</button>
   </div>
@@ -765,8 +769,8 @@ function updateDemoUI() {
   document.getElementById('demoUsageText').textContent = used+' of '+DEMO_LIMIT+' quotes used \u00B7 '+remaining+' remaining';
   var lp = document.getElementById('lockPhone');
   var le = document.getElementById('lockEmail');
-  if(lp) lp.textContent = '063 855 7681';
-  if(le) le.textContent = 'locallift.za@gmail.com';
+  if(lp){ lp.textContent = '063 855 7681'; lp.href = 'tel:+27638557681'; }
+  if(le){ le.textContent = 'locallift.za@gmail.com'; le.href = 'mailto:locallift.za@gmail.com'; }
 }
 function showLockScreen() {
   updateDemoUI();
