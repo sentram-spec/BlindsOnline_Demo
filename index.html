@@ -913,7 +913,7 @@ function downloadPDF() {
   
   
   // Inside downloadPDF() - add before doc.save
-if (biz.thanks) {
+	if (biz.thanks) {
     doc.setFont('helvetica', 'italic');
     doc.setFontSize(10);
     doc.setTextColor(107, 104, 96); // Matches your --muted color
@@ -921,7 +921,7 @@ if (biz.thanks) {
     // Position it near the bottom (page height is 297mm)
     const pageHeight = doc.internal.pageSize.height;
     doc.text(biz.thanks, 105, pageHeight - 20, { align: 'center' });
-}
+	}
 
   doc.save(`Quote_${q}_${(document.getElementById('custName').value || 'Customer').replace(/\s+/g, '_')}.pdf`);
   toast('PDF downloaded');
