@@ -476,9 +476,9 @@ input,select,textarea{font-family:'DM Sans',sans-serif}
             <textarea class="inp" id="bTerms" rows="4" placeholder="e.g. Quote valid for 30 days. 50% deposit required."></textarea>
           </div>
 		  <div class="field-wrap">
-  <label class="field-label">Thank you note (PDF bottom)</label>
-  <textarea class="inp" id="bThanks" rows="2" placeholder="e.g. Thank you for supporting a local Alberton business!"></textarea>
-</div>
+			<label class="field-label">Thank you note (PDF bottom)</label>
+			<textarea class="inp" id="bThanks" rows="2" placeholder="e.g. Thank you for supporting a local Alberton business!"></textarea>
+		</div>
           <div class="field-wrap">
             <label class="field-label">Next quote number</label>
             <input class="inp" id="bQuoteStart" type="number" placeholder="1001"/>
@@ -614,8 +614,7 @@ function loadBizSettings() {
   if (biz.addr) document.getElementById('bAddr').value = biz.addr;
   if (biz.terms) document.getElementById('bTerms').value = biz.terms;
   if (biz.quoteStart) document.getElementById('bQuoteStart').value = biz.quoteStart;
-  // In loadBizSettings()
-if (biz.thanks) document.getElementById('bThanks').value = biz.thanks;
+  if (biz.thanks) document.getElementById('bThanks').value = biz.thanks;
 }
 function saveBusiness() {
   biz.name = document.getElementById('bName').value.trim() || biz.name;
@@ -636,7 +635,7 @@ function saveQuoteSettings() {
   loadQuoteNum();
   toast('Quote settings saved');
   biz.thanks = document.getElementById('bThanks').value;
-// ... existing localStorage.setItem('sb_biz', JSON.stringify(biz));
+  // ... existing localStorage.setItem('sb_biz', JSON.stringify(biz));
 }
 
 /* ─── Quote number ─── */
@@ -917,7 +916,7 @@ function downloadPDF() {
   
   
   // Inside downloadPDF() - add before doc.save
-	if (biz.thanks) {
+  if (biz.thanks) {
     doc.setFont('helvetica', 'italic');
     doc.setFontSize(10);
     doc.setTextColor(107, 104, 96); // Matches your --muted color
@@ -925,7 +924,7 @@ function downloadPDF() {
     // Position it near the bottom (page height is 297mm)
     const pageHeight = doc.internal.pageSize.height;
     doc.text(biz.thanks, 105, pageHeight - 20, { align: 'center' });
-	}
+  }
 
   doc.save(`Quote_${q}_${(document.getElementById('custName').value || 'Customer').replace(/\s+/g, '_')}.pdf`);
   toast('PDF downloaded');
